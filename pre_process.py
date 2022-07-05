@@ -137,15 +137,15 @@ if __name__ == '__main__':
 
     print('Extracting cars_train.tgz...')
     if not os.path.exists('cars_train'):
-        with tarfile.open('cars_train.tgz', "r:gz") as tar:
+        with tarfile.open('StanfordDataset/cars_train.tgz', "r:gz") as tar:
             tar.extractall()
     print('Extracting cars_test.tgz...')
     if not os.path.exists('cars_test'):
-        with tarfile.open('cars_test.tgz', "r:gz") as tar:
+        with tarfile.open('StanfordDataset/cars_test.tgz', "r:gz") as tar:
             tar.extractall()
     print('Extracting car_devkit.tgz...')
     if not os.path.exists('devkit'):
-        with tarfile.open('car_devkit.tgz', "r:gz") as tar:
+        with tarfile.open('StanfordDataset/car_devkit.tgz', "r:gz") as tar:
             tar.extractall()
 
     cars_meta = scipy.io.loadmat('devkit/cars_meta')

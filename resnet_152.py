@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD
 from keras.layers import Input, Dense, Conv2D, MaxPooling2D, AveragePooling2D, ZeroPadding2D, Flatten, Activation, add
-from keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 from keras.models import Model
 from keras import backend as K
 
@@ -154,11 +154,12 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=None):
       # Use pre-trained weights for Tensorflow backend
       weights_path = 'models/resnet152_weights_tf.h5'
 
+
     model.load_weights(weights_path, by_name=True)
 
     # Truncate and replace softmax layer for transfer learning
     # Cannot use model.layers.pop() since model is not of Sequential() type
-    # The method below works since pre-trained weights are stored in layers but not in the model
+    # The method below works since pre-tra20ined weights are stored in layers but not in the model
     x_newfc = AveragePooling2D((7, 7), name='avg_pool')(x)
     x_newfc = Flatten()(x_newfc)
     x_newfc = Dense(num_classes, activation='softmax', name='fc8')(x_newfc)
@@ -166,7 +167,7 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=None):
     model = Model(img_input, x_newfc)
 
     # Learning rate is changed to 0.001
-    sgd = SGD(lr=1e-3, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(learning_rate=1e-3, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     return model

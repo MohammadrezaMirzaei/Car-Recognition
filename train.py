@@ -12,8 +12,8 @@ num_classes = 196
 num_train_samples = 6549
 num_valid_samples = 1595
 verbose = 1
-batch_size = 16
-num_epochs = 100000
+batch_size = 8
+num_epochs = 100
 patience = 50
 
 if __name__ == '__main__':
@@ -31,11 +31,11 @@ if __name__ == '__main__':
     tensor_board = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=True)
     log_file_path = 'logs/training.log'
     csv_logger = CSVLogger(log_file_path, append=False)
-    early_stop = EarlyStopping('val_acc', patience=patience)
-    reduce_lr = ReduceLROnPlateau('val_acc', factor=0.1, patience=int(patience / 4), verbose=1)
+    early_stop = EarlyStopping('val_accuracy', patience=patience)
+    reduce_lr = ReduceLROnPlateau('val_accuracy', factor=0.1, patience=int(patience / 4), verbose=1)
     trained_models_path = 'models/model'
-    model_names = trained_models_path + '.{epoch:02d}-{val_acc:.2f}.hdf5'
-    model_checkpoint = ModelCheckpoint(model_names, monitor='val_acc', verbose=1, save_best_only=True)
+    model_names = trained_models_path + '.{epoch:02d}-{val_accuracy:.2f}.hdf5'
+    model_checkpoint = ModelCheckpoint(model_names, monitor='val_accuracy', verbose=1, save_best_only=True)
     callbacks = [tensor_board, model_checkpoint, csv_logger, early_stop, reduce_lr]
 
     # generators
@@ -45,11 +45,11 @@ if __name__ == '__main__':
                                                          class_mode='categorical')
 
     # fine tune the model
-    model.fit_generator(
+    model.fit(
         train_generator,
-        steps_per_epoch=num_train_samples / batch_size,
+        steps_per_epoch=num_train_samples / batch_size/10,
         validation_data=valid_generator,
-        validation_steps=num_valid_samples / batch_size,
+        validation_steps=num_valid_samples / batch_size/10,
         epochs=num_epochs,
         callbacks=callbacks,
         verbose=verbose)

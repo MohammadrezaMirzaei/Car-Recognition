@@ -4,6 +4,8 @@ import os
 
 import matplotlib.pyplot as plt
 import numpy as np
+import keras
+import tensorflow as tf
 from keras.preprocessing import image
 from sklearn.metrics import confusion_matrix
 from tqdm import tqdm
@@ -33,14 +35,14 @@ def predict(img_dir, model):
 
     for img_path in tqdm(img_files):
         # print(img_path)
-        img = image.load_img(img_path, target_size=(224, 224))
-        x = image.img_to_array(img)
+        img = keras.utils.load_img(img_path, target_size=(224, 224))
+        x = keras.utils.img_to_array(img)
         preds = model.predict(x[None, :, :, :])
         decoded = decode_predictions(preds, top=1)
         pred_label = decoded[0][0][0]
         # print(pred_label)
         y_pred.append(pred_label)
-        tokens = img_path.split(os.pathsep)
+        tokens = img_path.split(os.sep)
         class_id = int(tokens[-2])
         # print(str(class_id))
         y_test.append(class_id)
